@@ -105,7 +105,9 @@ public final class DesktopConnection implements Closeable {
 
     public ControlMessage receiveControlMessage() throws IOException {
         ControlMessage msg = reader.next();
+        Ln.w("receiveControlMessage");
         while (msg == null) {
+            Ln.w("receiveControlMessage  next");
             reader.readFrom(controlInputStream);
             msg = reader.next();
         }

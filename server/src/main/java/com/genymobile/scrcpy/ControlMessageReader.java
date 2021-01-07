@@ -53,6 +53,7 @@ public class ControlMessageReader {
 
         int type = buffer.get();
         ControlMessage msg;
+        Ln.w("message type=" + type);
         switch (type) {
             case ControlMessage.TYPE_INJECT_KEYCODE:
                 msg = parseInjectKeycode();

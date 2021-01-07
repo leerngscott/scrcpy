@@ -1,9 +1,10 @@
 package com.genymobile.scrcpy.wrappers;
 
-import com.genymobile.scrcpy.Ln;
 
 import android.os.IInterface;
 import android.view.InputEvent;
+
+import com.genymobile.scrcpy.Ln;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,16 +26,27 @@ public final class InputManager {
 
     private Method getInjectInputEventMethod() throws NoSuchMethodException {
         if (injectInputEventMethod == null) {
-            injectInputEventMethod = manager.getClass().getMethod("injectInputEvent", InputEvent.class, int.class);
+            try {
+                injectInputEventMethod = manager.getClass().getMethod("injectInputEventForDisplay", InputEvent.class, int.class, int.class);
+            } catch (Exception e) {
+                injectInputEventMethod = manager.getClass().getMethod("injectInputEvent", InputEvent.class, int.class);
+            }
         }
         return injectInputEventMethod;
     }
 
-    public boolean injectInputEvent(InputEvent inputEvent, int mode) {
+    public boolean injectInputEvent(InputEvent inputEvent, int displayId, int mode) {
         try {
             Method method = getInjectInputEventMethod();
-            return (boolean) method.invoke(manager, inputEvent, mode);
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
+            boolean ret = false;
+            try {
+                //noinspection ConstantConditions
+                ret = (boolean) method.invoke(manager, inputEvent, displayId, mode);
+            } catch (Exception e) {
+                method.invoke(manager, inputEvent, mode);
+            }
+            return ret;
+        } catch (Exception e) {
             Ln.e("Could not invoke method", e);
             return false;
         }

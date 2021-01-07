@@ -1,5 +1,7 @@
 package com.genymobile.scrcpy;
 
+
+
 import com.genymobile.scrcpy.wrappers.ClipboardManager;
 import com.genymobile.scrcpy.wrappers.ContentProvider;
 import com.genymobile.scrcpy.wrappers.InputManager;
@@ -110,7 +112,8 @@ public final class Device {
         }
 
         // main display or any display on Android >= Q
-        supportsInputEvents = displayId == 0 || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+//        supportsInputEvents = displayId == 0 || Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q;
+        supportsInputEvents = true;
         if (!supportsInputEvents) {
             Ln.w("Input events are not supported for secondary displays before Android 10");
         }
@@ -162,14 +165,14 @@ public final class Device {
             throw new AssertionError("Could not inject input event if !supportsInputEvents()");
         }
 
-        if (displayId != 0 && !InputManager.setDisplayId(inputEvent, displayId)) {
-            return false;
-        }
-
-        return serviceManager.getInputManager().injectInputEvent(inputEvent, mode);
+//        if (displayId != 0 && !InputManager.setDisplayId(inputEvent, displayId)) {
+//            return false;
+//        }
+        return serviceManager.getInputManager().injectInputEvent(inputEvent, displayId, mode);
     }
 
     public boolean injectEvent(InputEvent event) {
+        Ln.w("injectEvent " + event.toString());
         return injectEvent(event, InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
     }
 

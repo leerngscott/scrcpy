@@ -174,6 +174,7 @@ public class Controller {
     private boolean injectTouch(int action, long pointerId, Position position, float pressure, int buttons) {
         long now = SystemClock.uptimeMillis();
 
+        Ln.d("injectTouch action=" + action);
         Point point = device.getPhysicalPoint(position);
         if (point == null) {
             Ln.w("Ignore touch event, it was generated for a different device size");
